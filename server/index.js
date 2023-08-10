@@ -12,7 +12,7 @@ const PostModel = require('./models/PostModel')
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://blog-app-three-taupe.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }))
