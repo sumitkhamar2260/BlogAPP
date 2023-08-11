@@ -11,11 +11,18 @@ const PostModel = require('./models/PostModel')
 
 const app = express()
 app.use(express.json())
-app.use(cors({
-    origin: ["http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}))
+// app.use(cors({
+//     origin: ["http://localhost:5173"],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true
+// }))
+
+const corsOptions = {
+  origin: true,
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(cookieParser())
 app.use(express.static('public'))
 const CONN_STR=`mongodb+srv://admin:hwgMrw8rMjXzeCwW@cluster0.cklccnj.mongodb.net/Blog?retryWrites=true&w=majority`
@@ -74,7 +81,14 @@ app.post('/login', (req, res) => {
                 if(response) {
                     const token = jwt.sign({email: user.email, username: user.username},
                         "jwt-secret-key", {expiresIn: '1d'})
-                    res.cookie('token', token)
+                  let options={
+                expires:new Date(Date.now()+15*24*60*60*1000),
+                httpOnly:true,
+                secure:true,
+                sameSite:"none",
+                    path:"/"
+          }
+                    res.cookie('token', token,options)
                     return res.json("Success")
                 } else {
                     return res.json("Password is incorrect");
